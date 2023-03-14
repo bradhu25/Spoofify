@@ -1,14 +1,19 @@
-import React, { useState } from "react";
-import { StyleSheet, Text, View, Image } from "react-native";
-import colors from "./Themes/colors";
+import { StyleSheet, Text, View, Image, Pressable } from "react-native";
 import Colors from "./Themes/colors";
+import { useNavigation } from '@react-navigation/native';
+import { AntDesign } from '@expo/vector-icons';
 
-export default function Tracks({ id, title, artist, albumImage, albumName, duration,}) {
+export default function Tracks({title, artist, albumImage, albumName, duration, song_url, preview_url}) {
+  const navigation = useNavigation();
+
   return(
-    <View style={styles.track}>
-      <View style={styles.container1}>
-        <Text style={styles.trackNum}>{id}</Text>
-      </View>
+    <Pressable style={styles.track} onPress={() => navigation.navigate("Song Details", {'song_url': song_url}) }>
+      <Pressable style={styles.previewBox} onPress={(e) => {
+          e.stopPropagation();
+          navigation.navigate("Song Preview", {'preview_url': preview_url})
+      }}>
+          <AntDesign name="play" size={20} style={styles.playButton} />
+      </Pressable>
       <View style={styles.container2}>
         <Image style={styles.albumImage} source={ {uri: albumImage} }/>
       </View>
@@ -22,7 +27,7 @@ export default function Tracks({ id, title, artist, albumImage, albumName, durat
       <View style={styles.container5}>
         <Text style={styles.duration}>{duration}</Text>
       </View>
-    </View>
+    </Pressable>
   )
 }
 
@@ -47,7 +52,7 @@ const styles = StyleSheet.create({
   },
 
   trackNum: {
-    color: colors.gray,
+    color: Colors.gray,
     fontSize: 15,
   },
 
@@ -88,5 +93,13 @@ const styles = StyleSheet.create({
   duration: {
     color: 'white'
 
+  },
+  previewBox: {
+    alignContent: 'center',
+    justifyContent: 'center',
+    width: 40
+  },
+  playButton: {
+    color: Colors.spotify
   }
 });
